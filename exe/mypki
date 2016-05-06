@@ -1,0 +1,57 @@
+#! /usr/bin/env ruby
+require 'mypki'
+require 'trollop'
+
+args = []
+
+while arg = ARGV.first
+  if arg == '--'
+    ARGV.shift 
+    break
+  elsif arg.start_with? '-'
+    args << ARGV.shift
+  else
+    break
+  end
+end
+
+options = Trollop::options args do
+  version MyPKI::VERSION
+  banner "MyPKI #{MyPKI::VERSION}: PKI-enables Ruby's OpenSSL libraries, which PKI-enables most libraries and gems written in Ruby.\n\nUSAGE:"
+  opt :ssh, "Also configure ssh to use your PKI"
+  opt :init, "Don't lazy-load, immediately prompting for a password if needed"
+  opt :no_verify, "Don't verify the certificate", depends: [:reconfigure]
+  opt :reconfigure, "Configure MyPKI, deleting any existing configuration"
+end
+
+if options[:reconfigure]
+  MyPKI.init reconfigure: true, no_verify: options[:no_verify]
+end
+
+if options[:init]
+  MyPKI.init
+end
+
+ARGV.shift args.size 
+
+if ARGV.empty?
+  Trollop::die "you must specify a program or option"
+end
+
+executable = ARGV.shift
+    
+path = if File.file?(executable) && File.executable?(executable)
+  executable
+elsif ENV['PATH']
+  path = ENV['PATH'].split(File::PATH_SEPARATOR).find do |p|
+    abs_path = File.join(p, executable)
+    File.file?(abs_path) && File.executable?(abs_path)
+  end
+  path && File.expand_path(executable, path)
+end
+
+if path.nil?
+  raise "Could not find #{executable}"
+else
+  exec "/usr/bin/env ruby -r mypki #{path} #{ARGV.join(' ')}"
+end
