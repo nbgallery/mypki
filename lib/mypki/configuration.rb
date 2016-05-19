@@ -1,3 +1,4 @@
+require 'yaml'
 require 'multi_json'
 
 module MyPKI
