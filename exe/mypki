@@ -26,32 +26,32 @@ end
 
 if options[:reconfigure]
   MyPKI.init reconfigure: true, no_verify: options[:no_verify]
-end
-
-if options[:init]
-  MyPKI.init
-end
-
-ARGV.shift args.size 
-
-if ARGV.empty?
-  Trollop::die "you must specify a program or option"
-end
-
-executable = ARGV.shift
-    
-path = if File.file?(executable) && File.executable?(executable)
-  executable
-elsif ENV['PATH']
-  path = ENV['PATH'].split(File::PATH_SEPARATOR).find do |p|
-    abs_path = File.join(p, executable)
-    File.file?(abs_path) && File.executable?(abs_path)
-  end
-  path && File.expand_path(executable, path)
-end
-
-if path.nil?
-  raise "Could not find #{executable}"
 else
-  exec "/usr/bin/env ruby -r mypki #{path} #{ARGV.join(' ')}"
+  if options[:init]
+    MyPKI.init
+  end
+  
+  ARGV.shift args.size 
+  
+  if ARGV.empty?
+    Trollop::die "you must specify a program or option"
+  end
+  
+  executable = ARGV.shift
+      
+  path = if File.file?(executable) && File.executable?(executable)
+    executable
+  elsif ENV['PATH']
+    path = ENV['PATH'].split(File::PATH_SEPARATOR).find do |p|
+      abs_path = File.join(p, executable)
+      File.file?(abs_path) && File.executable?(abs_path)
+    end
+    path && File.expand_path(executable, path)
+  end
+  
+  if path.nil?
+    raise "Could not find #{executable}"
+  else
+    exec "/usr/bin/env ruby -r mypki #{path} #{ARGV.join(' ')}"
+  end
 end
