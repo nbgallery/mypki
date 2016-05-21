@@ -11,7 +11,7 @@ Gem::Specification.new do |spec|
 
   spec.summary       = %q{PKI-enable Ruby}
   spec.description   = %q{PKI-enables Ruby's OpenSSL libraries, which PKI-enables most libraries and gems written in Ruby.}
-  spec.homepage      = "https://github.com/kylekyle/mypki"
+  spec.homepage      = "https://github.com/jupyter-gallery/mypki"
 
   spec.files         = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }
   spec.bindir        = "exe"
