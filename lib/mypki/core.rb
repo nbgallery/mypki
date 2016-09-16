@@ -69,8 +69,8 @@ module MyPKI
     Context.new **options; true
   end
 
-  def dn
+  def dn(flags=nil)
     init
-    Instance.cert.subject.to_s
+    Instance.cert.subject.to_s(flags)
   end
 end
