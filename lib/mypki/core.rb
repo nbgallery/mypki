@@ -17,8 +17,10 @@ module MyPKI
   Instance.instance_eval do 
     @verify_mode = OpenSSL::SSL::VERIFY_NONE
     @immutable_attributes = [:verify_mode].to_set
-    
+
     meta_eval do
+      define_method(:initialize_copy){|*a|}
+
       (instance_methods - methods).each do |method|
         if method['=']
           getter, setter = method[0..-2].to_sym, method
@@ -40,7 +42,7 @@ module MyPKI
         Configuration.new ENV['MYPKI_CONFIG']||'~/.mypki', **options
       end
     
-      context = Instance.dup
+      context = Instance.clone
       
       context.instance_eval do
         # make immutable attributes immutable
