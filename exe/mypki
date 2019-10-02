@@ -1,6 +1,6 @@
 #! /usr/bin/env ruby
 require 'mypki'
-require 'trollop'
+require 'optimist'
 
 args = []
 
@@ -15,7 +15,7 @@ while arg = ARGV.first
   end
 end
 
-options = Trollop::options args do
+options = Optimist::options args do
   version MyPKI::VERSION
   banner "MyPKI #{MyPKI::VERSION}: PKI-enables Ruby's OpenSSL libraries, which PKI-enables most libraries and gems written in Ruby.\n\nUSAGE:"
   opt :ssh, "Also configure ssh to use your PKI"
@@ -34,7 +34,7 @@ else
   ARGV.shift args.size 
   
   if ARGV.empty?
-    Trollop::die "you must specify a program or option"
+    Optimist::die "you must specify a program or option"
   end
   
   executable = ARGV.shift
