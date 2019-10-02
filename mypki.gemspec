@@ -19,7 +19,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_dependency 'multi_json'
-  spec.add_dependency 'trollop'
+  spec.add_dependency 'optimist'
   spec.add_dependency 'metaid'
   spec.add_dependency 'highline'
   spec.add_dependency 'retriable'
